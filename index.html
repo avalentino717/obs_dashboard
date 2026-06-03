@@ -25,10 +25,9 @@
     </div>
   </div>
 </header>
-<main>
-  <section class="home-hero" aria-labelledby="home-title">
 
-    <!-- Left: narrative -->
+<main>
+  <section class="home-hero home-hero--solo" aria-labelledby="home-title">
     <div class="home-hero__content">
       <p class="home-hero__eyebrow">Jobs at the Crossroads</p>
       <h2 id="home-title">AI is changing the work inside jobs before it replaces job titles.</h2>
@@ -38,12 +37,10 @@
         while others still depend on judgment, care, context, and accountability.
       </p>
       <p>
-        This story follows how job postings reflect that shift—and the physical infrastructure
-        driving it. Explore where AI adoption is growing, how salaries move, where automation risk
-        concentrates, and where the data centers powering it all are being built.
+        This project explores how job postings reflect that shift—and the physical infrastructure
+        driving it. Choose a view below to begin.
       </p>
 
-      <!-- Stat pills bridging narrative → map -->
       <div class="hero-stats">
         <div class="hero-stat">
           <span class="hero-stat__value">500+</span>
@@ -58,33 +55,32 @@
           <span class="hero-stat__label">Of job posting data</span>
         </div>
       </div>
-
-      <div class="hero-actions">
-        <button class="home-hero__cta" type="button" id="see-analytics">See analytics →</button>
-        <a class="home-hero__secondary" href="#map-section">Explore the map ↓</a>
-      </div>
     </div>
-
-    <!-- Right: map panel -->
-    <div class="home-hero__map" id="map-section" aria-label="AI Data Centers map preview">
-      <div class="home-hero__map-label">
-        <span class="home-hero__map-eyebrow">Physical Infrastructure</span>
-        <strong>AI Data Centers Across America</strong>
-        <p>The data centers powering AI are reshaping communities nationwide.</p>
-      </div>
-      <div class="home-hero__map-frame">
-        <iframe
-          src="./ai-datacenter-map.html"
-          title="AI Data Centers Across the United States"
-          loading="lazy"
-          scrolling="no"
-          onload="try{this.contentDocument.querySelector('header').style.display='none'}catch(e){}">
-        </iframe>
-      </div>
-    </div>
-
   </section>
-</main>
-<footer class="app-footer">&copy; Wisdom, Chris, Angela, Cloris</footer>
 
+  <!-- Three-page nav cards -->
+  <nav class="page-nav" aria-label="Explore sections">
+    <a class="page-nav__card" href="./map.html">
+      <div class="page-nav__card-icon">🗺️</div>
+      <div class="page-nav__card-body">
+        <p class="page-nav__card-eyebrow">Physical Infrastructure</p>
+        <strong class="page-nav__card-title">AI Data Center Map</strong>
+        <p class="page-nav__card-desc">Explore operational, under-construction, proposed, and community-reported AI data centers across America. Includes zip-code-level analytics.</p>
+      </div>
+      <span class="page-nav__card-arrow" aria-hidden="true">→</span>
+    </a>
+
+    <a class="page-nav__card" href="./analytics.html">
+      <div class="page-nav__card-icon">📊</div>
+      <div class="page-nav__card-body">
+        <p class="page-nav__card-eyebrow">Job Posting Analysis</p>
+        <strong class="page-nav__card-title">Analytics Dashboard</strong>
+        <p class="page-nav__card-desc">Guided chart story covering AI adoption trends, salary shifts, automation risk by industry and seniority, reskilling demand, and correlations.</p>
+      </div>
+      <span class="page-nav__card-arrow" aria-hidden="true">→</span>
+    </a>
+  </nav>
+</main>
+
+<footer class="app-footer">&copy; Wisdom, Chris, Angela, Cloris</footer>
 <script type="module" src="./app.js"></script>

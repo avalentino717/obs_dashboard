@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Jobs at the Crossroads — Analytics</title>
+<title>Jobs at the Crossroads — AI Data Center Map</title>
 <link rel="stylesheet" type="text/css" href="./inspector.css">
 <link rel="stylesheet" type="text/css" href="./dashboard.css">
 <body>
@@ -11,7 +11,7 @@
       <div class="logo-dot"></div>
       <div class="title-block">
         <h1>Jobs at the Crossroads</h1>
-        <p>Explore adoption, salaries, automation risk, and reskilling patterns across industries.</p>
+        <p>AI Data Centers Across America</p>
       </div>
       <div class="stats-bar">
         <div>Dataset <strong>job postings</strong></div>
@@ -27,19 +27,24 @@
   </div>
 </header>
 
-<main>
-  <section class="analytics-shell" id="analytics" aria-label="Analytics story">
-    <div id="notebook"></div>
-  </section>
+<main class="map-page-main">
+  <div class="map-page-frame">
+    <iframe
+      src="./ai-datacenter-map.html"
+      title="AI Data Centers Across the United States"
+      id="map-iframe"
+      onload="try{this.contentDocument.querySelector('header').style.display='none'}catch(e){}">
+    </iframe>
+  </div>
 
   <!-- Bottom page navigation -->
   <nav class="bottom-nav" aria-label="Navigate to other sections">
     <a class="bottom-nav__btn bottom-nav__btn--home" href="./index.html">← Home</a>
     <div class="bottom-nav__pages">
-      <a class="bottom-nav__btn" href="./map.html">
+      <a class="bottom-nav__btn bottom-nav__btn--active" href="./map.html" aria-current="page">
         🗺️ Data Center Map
       </a>
-      <a class="bottom-nav__btn bottom-nav__btn--active" href="./analytics.html" aria-current="page">
+      <a class="bottom-nav__btn" href="./analytics.html">
         📊 Analytics Dashboard
       </a>
     </div>
