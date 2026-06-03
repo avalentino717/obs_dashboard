@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Data Centers Across the United States</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --green-dark: #1a3a1a;
+    --green-mid: #2d5a27;
+    --green-light: #4a7c3f;
+    --green-pale: #e8f2e3;
+    --amber: #c8841a;
+    --amber-pale: #fdf3e0;
+    --red: #b33a2a;
+    --red-pale: #fce8e5;
+    --blue: #1e4d8c;
+    --blue-pale: #e5edf8;
+    --gray: #5a5a5a;
+    --gray-pale: #f4f4f2;
+    --border: #d8d8d0;
+    --text: #1a1a18;
+    --text-muted: #6a6a62;
+    --bg: #fafaf7;
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  header {
+    background: var(--green-dark);
+    color: #fff;
+    padding: 1.5rem 2rem 1.2rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .header-title { flex: 1; }
+
+  header h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    font-weight: 400;
+    line-height: 1.2;
+    color: #fff;
+    margin-bottom: 0.3rem;
+  }
+
+  header p {
+    font-size: 0.82rem;
+    color: rgba(255,255,255,0.6);
+    font-weight: 300;
+    letter-spacing: 0.02em;
+  }
+
+  .stats-bar {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .stat {
+    text-align: right;
+  }
+
+  .stat-num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1.6rem;
+    line-height: 1;
+    color: #fff;
+  }
+
+  .stat-label {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.55);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-top: 2px;
+  }
+
+  .controls {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 0.75rem 2rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter-label {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-right: 0.25rem;
+  }
+
+  .filter-btn {
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 0.3rem 0.9rem;
+    font-size: 0.8rem;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    background: #fff;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s;
+    font-weight: 400;
+  }
+
+  .filter-btn:hover { border-color: #999; color: var(--text); }
+
+  .filter-btn.active {
+    color: #fff;
+    border-color: transparent;
+    font-weight: 500;
+  }
+
+  .filter-btn.active.op   { background: var(--green-light); }
+  .filter-btn.active.uc   { background: var(--amber); }
+  .filter-btn.active.prop { background: var(--blue); }
+  .filter-btn.active.cr   { background: var(--red); }
+  .filter-btn.active.all  { background: var(--green-dark); }
+
+  .dot {
+    width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0;
+  }
+  .dot.op   { background: var(--green-light); }
+  .dot.uc   { background: var(--amber); }
+  .dot.prop { background: var(--blue); }
+  .dot.cr   { background: var(--red); }
+
+  #map {
+    flex: 1;
+    min-height: 540px;
+    z-index: 1;
+  }
+
+  footer {
+    background: var(--green-dark);
+    color: rgba(255,255,255,0.5);
+    font-size: 0.75rem;
+    padding: 0.75rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  footer a { color: rgba(255,255,255,0.7); text-decoration: none; }
+  footer a:hover { color: #fff; }
+
+  /* Leaflet popup overrides */
+  .leaflet-popup-content-wrapper {
+    border-radius: 10px !important;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15) !important;
+    border: 1px solid var(--border) !important;
+    padding: 0 !important;
+    overflow: hidden;
+  }
+
+  .leaflet-popup-content { margin: 0 !important; width: 260px !important; }
+  .leaflet-popup-tip { background: #fff !important; }
+
+  .popup-inner {
+    padding: 14px 16px;
+  }
+
+  .popup-status {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    padding: 2px 8px;
+    border-radius: 12px;
+    margin-bottom: 6px;
+  }
+
+  .popup-status.op   { background: var(--green-pale); color: var(--green-mid); }
+  .popup-status.uc   { background: var(--amber-pale); color: #8a5a0a; }
+  .popup-status.prop { background: var(--blue-pale);  color: var(--blue); }
+  .popup-status.cr   { background: var(--red-pale);   color: var(--red); }
+
+  .popup-name {
+    font-family: 'DM Serif Display', serif;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+
+  .popup-location {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-bottom: 8px;
+  }
+
+  .popup-detail {
+    font-size: 0.78rem;
+    line-height: 1.5;
+    color: var(--text);
+    border-top: 1px solid var(--border);
+    padding-top: 8px;
+    margin-top: 4px;
+  }
+
+  .popup-detail b { color: var(--text-muted); font-weight: 500; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-title">
+    <h1>AI Data Centers Across the United States</h1>
+    <p>Operational · Under Construction · Proposed · Community Reported Concerns</p>
+  </div>
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-num" id="count-op">—</div>
+      <div class="stat-label">Operational</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="count-uc">—</div>
+      <div class="stat-label">Building</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="count-prop">—</div>
+      <div class="stat-label">Proposed</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="count-cr">—</div>
+      <div class="stat-label">Reported</div>
+    </div>
+  </div>
+</header>
+
+<div class="controls">
+  <span class="filter-label">Show:</span>
+  <button class="filter-btn active all" data-filter="all">All</button>
+  <button class="filter-btn" data-filter="op"><span class="dot op"></span>Operational</button>
+  <button class="filter-btn" data-filter="uc"><span class="dot uc"></span>Under Construction</button>
+  <button class="filter-btn" data-filter="prop"><span class="dot prop"></span>Proposed</button>
+  <button class="filter-btn" data-filter="cr"><span class="dot cr"></span>Community Reported</button>
+</div>
+
+<div id="map"></div>
+
+<footer>
+  <span>Data sourced from public announcements &amp; community reports · Last updated 2026</span>
+  <span>Built with <a href="https://leafletjs.com" target="_blank">Leaflet.js</a> · Tiles © OpenStreetMap contributors</span>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+const DATA = [
+  // OPERATIONAL
+  { name:"Microsoft Northern Virginia Campus", loc:"Ashburn, VA", lat:39.0438, lng:-77.4874, status:"op", owner:"Microsoft", notes:"Largest concentration of data centers globally. Multiple campuses." },
+  { name:"Amazon Web Services (IAD)", loc:"Ashburn, VA", lat:39.0300, lng:-77.4700, status:"op", owner:"Amazon", notes:"Core AWS US-East region infrastructure." },
+  { name:"Google Data Center", loc:"The Dalles, OR", lat:45.5946, lng:-121.1787, status:"op", owner:"Google", notes:"Opened 2006. Uses Columbia River cooling. ~1M sq ft." },
+  { name:"Meta (Facebook) Data Center", loc:"Prineville, OR", lat:44.2998, lng:-120.8340, status:"op", owner:"Meta", notes:"One of Meta's first purpose-built data centers. Open Compute hardware." },
+  { name:"Apple Data Center", loc:"Reno, NV", lat:39.5296, lng:-119.8138, status:"op", owner:"Apple", notes:"1M sq ft. Powered by renewable energy." },
+  { name:"Switch SUPERNAP", loc:"Las Vegas, NV", lat:36.0906, lng:-115.1692, status:"op", owner:"Switch", notes:"Massive colocation campus. Flagship SUPERNAP facility." },
+  { name:"Google Data Center", loc:"Council Bluffs, IA", lat:41.2619, lng:-95.8608, status:"op", owner:"Google", notes:"Major Google cloud campus. Multiple buildings." },
+  { name:"Microsoft Azure Iowa", loc:"West Des Moines, IA", lat:41.5768, lng:-93.7110, status:"op", owner:"Microsoft", notes:"Major Azure cloud region in the midwest." },
+  { name:"Meta Data Center", loc:"Papillion, NE", lat:41.1545, lng:-96.0417, status:"op", owner:"Meta", notes:"Serves central US user base." },
+  { name:"Google Data Center", loc:"Mayes County, OK", lat:36.2946, lng:-95.3097, status:"op", owner:"Google", notes:"Uses wind energy from Oklahoma's abundant wind farms." },
+  { name:"Amazon AWS Data Center", loc:"Columbus, OH", lat:39.9612, lng:-82.9988, status:"op", owner:"Amazon", notes:"Part of large AWS Ohio region cluster." },
+  { name:"Microsoft Azure Virginia", loc:"Boydton, VA", lat:36.6668, lng:-78.3775, status:"op", owner:"Microsoft", notes:"Massive Azure campus in rural Virginia." },
+  { name:"xAI Colossus", loc:"Memphis, TN", lat:35.1495, lng:-90.0490, status:"op", owner:"xAI / Elon Musk", notes:"World's largest known GPU cluster as of 2024. ~100k H100 GPUs. Former Electrolux factory." },
+  { name:"Google Data Center", loc:"Lenoir, NC", lat:35.9138, lng:-81.5401, status:"op", owner:"Google", notes:"600 acres. Uses hydroelectric power." },
+  { name:"Apple Data Center", loc:"Maiden, NC", lat:35.5793, lng:-81.2087, status:"op", owner:"Apple", notes:"500k sq ft. Solar-powered." },
+  { name:"Google Data Center", loc:"Midlothian, TX", lat:32.4751, lng:-96.9942, status:"op", owner:"Google", notes:"Texas cloud campus serving southern US." },
+  { name:"Meta Data Center", loc:"Fort Worth, TX", lat:32.7555, lng:-97.3308, status:"op", owner:"Meta", notes:"2.4M sq ft. Large social media AI training hub." },
+  { name:"CyrusOne Dallas", loc:"Dallas, TX", lat:32.7767, lng:-96.7970, status:"op", owner:"CyrusOne", notes:"Major colocation facility in Dallas metro." },
+  { name:"Digital Realty (DFW)", loc:"Irving, TX", lat:32.8140, lng:-96.9489, status:"op", owner:"Digital Realty", notes:"Large carrier-neutral colocation campus." },
+  { name:"Google Data Center", loc:"Henderson, NV", lat:36.0397, lng:-114.9819, status:"op", owner:"Google", notes:"Nevada cloud region facility." },
+  { name:"AWS Data Center", loc:"Boardman, OR", lat:45.8399, lng:-119.7006, status:"op", owner:"Amazon", notes:"Oregon AWS region. Along Columbia River." },
+  { name:"Facebook (Meta) Data Center", loc:"Forest City, NC", lat:35.3329, lng:-81.8651, status:"op", owner:"Meta", notes:"1M sq ft. Open Compute infrastructure." },
+  { name:"QTS Data Center", loc:"Richmond, VA", lat:37.5407, lng:-77.4360, status:"op", owner:"QTS", notes:"Converted semiconductor plant. Hyperscale campus." },
+  { name:"Equinix SV Data Center", loc:"San Jose, CA", lat:37.3382, lng:-121.8863, status:"op", owner:"Equinix", notes:"Major interconnection hub for Silicon Valley." },
+  { name:"Google (Mountain View HQ)", loc:"Mountain View, CA", lat:37.3861, lng:-122.0839, status:"op", owner:"Google", notes:"Primary AI research and cloud operations." },
+  { name:"CoreSite Denver", loc:"Denver, CO", lat:39.7392, lng:-104.9903, status:"op", owner:"CoreSite", notes:"Colocation campus serving the Front Range." },
+
+  // UNDER CONSTRUCTION
+  { name:"Project Stargate — Phase 1", loc:"Abilene, TX", lat:32.4487, lng:-99.7331, status:"uc", owner:"OpenAI / SoftBank / Oracle", notes:"$100B AI infrastructure project. First campus. 10 buildings, 5 GW power target. 2025–2029 buildout." },
+  { name:"Meta Hyperion", loc:"Montgomery County, LA", lat:31.1799, lng:-93.0813, status:"uc", owner:"Meta", notes:"$10B+ campus. 4M sq ft. One of the largest AI training facilities ever announced." },
+  { name:"Microsoft AI Campus", loc:"Racine, WI", lat:42.7261, lng:-87.7829, status:"uc", owner:"Microsoft", notes:"$3.3B investment. Former case plant site. Part of $80B global AI buildout." },
+  { name:"Google Data Center Expansion", loc:"Clarksville, TN", lat:36.5298, lng:-87.3595, status:"uc", owner:"Google", notes:"Expanding existing Tennessee presence with AI-focused capacity." },
+  { name:"Amazon Project Kuiper DC", loc:"Redmond, WA", lat:47.6740, lng:-122.1215, status:"uc", owner:"Amazon", notes:"AI and satellite data processing facility." },
+  { name:"CoreWeave Campus", loc:"Plano, TX", lat:33.0198, lng:-96.6989, status:"uc", owner:"CoreWeave", notes:"Major GPU cloud build-out. $7B funding round 2024." },
+  { name:"Oracle AI Data Center", loc:"Phoenix, AZ", lat:33.4484, lng:-112.0740, status:"uc", owner:"Oracle", notes:"Part of Stargate infrastructure. $6.5B Arizona investment." },
+  { name:"Microsoft Goodyear Campus", loc:"Goodyear, AZ", lat:33.4353, lng:-112.3576, status:"uc", owner:"Microsoft", notes:"Major Azure expansion in Southwest." },
+  { name:"Google South Carolina", loc:"Berkeley County, SC", lat:33.1935, lng:-79.9553, status:"uc", owner:"Google", notes:"Expanding existing campus with AI infrastructure." },
+  { name:"Apple Data Center", loc:"Waukee, IA", lat:41.6114, lng:-93.8880, status:"uc", owner:"Apple", notes:"$1.9B investment. Renewable energy powered." },
+  { name:"Sabey Data Centers", loc:"Quincy, WA", lat:47.2348, lng:-119.8526, status:"uc", owner:"Sabey", notes:"Expanding hyperscale campus. Low-cost hydro power." },
+  { name:"Nautilus Solar + AI Campus", loc:"Lockhart, TX", lat:29.8847, lng:-97.6697, status:"uc", owner:"Nautilus", notes:"Integrated solar generation and AI compute campus." },
+  { name:"Tract Data Center", loc:"San Antonio, TX", lat:29.4241, lng:-98.4936, status:"uc", owner:"Tract", notes:"Large-scale AI campus in Texas Hill Country gateway." },
+  { name:"SwitchNAP Michigan", loc:"Grand Rapids, MI", lat:42.9634, lng:-85.6681, status:"uc", owner:"Switch", notes:"Midwest expansion campus. Wind-powered." },
+  { name:"DataBank Expansion", loc:"Salt Lake City, UT", lat:40.7608, lng:-111.8910, status:"uc", owner:"DataBank", notes:"Expanding colocation capacity for AI workloads." },
+  { name:"Lumen AI Campus", loc:"Monroe, LA", lat:32.5093, lng:-92.1193, status:"uc", owner:"Lumen/Ares", notes:"Converted manufacturing site. 1GW power target." },
+
+  // PROPOSED
+  { name:"Project Stargate — Southwest Hub", loc:"Buckeye, AZ", lat:33.3703, lng:-112.5838, status:"prop", owner:"OpenAI / Oracle", notes:"Proposed 1,000-acre site west of Phoenix. Grid connection under review." },
+  { name:"Microsoft Montana Campus", loc:"Cascade County, MT", lat:47.5, lng:-111.2, status:"prop", owner:"Microsoft", notes:"Proposed rural AI campus. Community opposition under review." },
+  { name:"Kevin O'Leary AI Campus", loc:"Box Elder County, UT", lat:41.52, lng:-112.5, status:"prop", owner:"American AI Initiative", notes:"5,000-acre proposed campus. Significant community opposition. Water concerns cited." },
+  { name:"AWS Proposed (Midwest)", loc:"Kansas City, MO", lat:39.0997, lng:-94.5786, status:"prop", owner:"Amazon", notes:"Proposed expansion to serve midwest cloud demand." },
+  { name:"Google Data Center", loc:"Jackson County, GA", lat:34.1317, lng:-83.5635, status:"prop", owner:"Google", notes:"Proposed large-scale campus. Zoning approval pending." },
+  { name:"Meta Indiana Campus", loc:"New Carlisle, IN", lat:41.7014, lng:-86.4950, status:"prop", owner:"Meta", notes:"Proposed 3,900-acre AI campus. One of largest proposed in US." },
+  { name:"Equinix Chicago Expansion", loc:"Chicago, IL", lat:41.8781, lng:-87.6298, status:"prop", owner:"Equinix", notes:"Proposed colocation expansion for AI interconnect." },
+  { name:"NV Energy AI Campus", loc:"Elko, NV", lat:40.8324, lng:-115.7631, status:"prop", owner:"NV Energy / Partners", notes:"Proposed remote Nevada campus using geothermal energy." },
+  { name:"South Texas AI Park", loc:"Laredo, TX", lat:27.5306, lng:-99.4803, status:"prop", owner:"Undisclosed", notes:"Proposed cross-border AI campus near US-Mexico border." },
+  { name:"Stargate Northeast Node", loc:"Kearny, NJ", lat:40.7682, lng:-74.1454, status:"prop", owner:"OpenAI consortium", notes:"Proposed East Coast Stargate node to serve financial sector AI." },
+  { name:"Blue Owl / Crusoe AI Campus", loc:"Cheyenne, WY", lat:41.1400, lng:-104.8202, status:"prop", owner:"Blue Owl / Crusoe Energy", notes:"Proposed AI campus using flared natural gas. Environmental review pending." },
+  { name:"Virginia Beach AI Campus", loc:"Virginia Beach, VA", lat:36.8529, lng:-75.9780, status:"prop", owner:"Undisclosed", notes:"Proposed undersea cable landing + AI campus." },
+
+  // COMMUNITY REPORTED (approximate locations)
+  { name:"Community Reports", loc:"Sulphur Springs, TX", lat:33.1382, lng:-95.6013, status:"cr", owner:"Community", notes:"300 reports. Concerns: water usage, health, noise from proposed facility." },
+  { name:"Community Reports", loc:"Lusby, MD", lat:38.4082, lng:-76.4580, status:"cr", owner:"Community", notes:"41 reports. Concerns: electricity grid strain, property values." },
+  { name:"Community Reports", loc:"Box Elder County, UT", lat:41.52, lng:-112.5, status:"cr", owner:"Community", notes:"39 reports tied to proposed 5,000-acre Kevin O'Leary campus. Water rights major concern." },
+  { name:"Community Reports", loc:"Archbald, PA", lat:41.5001, lng:-75.5371, status:"cr", owner:"Community", notes:"29 reports. Concerns: zoning process, secrecy/NDAs, noise." },
+  { name:"Community Reports", loc:"Madison, IN", lat:38.7359, lng:-85.3797, status:"cr", owner:"Community", notes:"24 reports. Health and water concerns." },
+  { name:"Community Reports", loc:"Hobart, IN", lat:41.5323, lng:-87.2553, status:"cr", owner:"Community", notes:"18 reports. Grid and noise concerns." },
+  { name:"Community Reports", loc:"Lebanon, IN", lat:40.0484, lng:-86.4691, status:"cr", owner:"Community", notes:"17 reports. Electricity and zoning concerns." },
+  { name:"Community Reports", loc:"Kenilworth, NJ", lat:40.6762, lng:-74.2904, status:"cr", owner:"Community", notes:"16 reports. Property values and traffic concerns." },
+  { name:"Community Reports", loc:"Fort Meade, FL", lat:27.7509, lng:-81.8031, status:"cr", owner:"Community", notes:"15 reports. Wildlife and water concerns." },
+  { name:"Community Reports", loc:"Clarksville, AR", lat:35.4715, lng:-93.4660, status:"cr", owner:"Community", notes:"15 reports. Concerns about local water supply." },
+  { name:"Community Reports", loc:"Cheyenne, WY", lat:41.1400, lng:-104.8202, status:"cr", owner:"Community", notes:"14 reports. Concerns about proposed AI campus and energy use." },
+  { name:"Community Reports", loc:"La Pine, OR", lat:43.6671, lng:-121.5028, status:"cr", owner:"Community", notes:"14 reports. Wildlife and land use concerns." },
+  { name:"Community Reports", loc:"Arlington, WA", lat:48.1654, lng:-122.1248, status:"cr", owner:"Community", notes:"12 reports. Concerns around Microsoft expansion." },
+  { name:"Community Reports", loc:"Festus, MO", lat:38.2131, lng:-90.3979, status:"cr", owner:"Community", notes:"11 reports. Grid and noise concerns." },
+  { name:"Community Reports", loc:"Lufkin, TX", lat:31.3382, lng:-94.7291, status:"cr", owner:"Community", notes:"9 reports. Health and water concerns." },
+  { name:"Community Reports", loc:"Maysville, GA", lat:34.2548, lng:-83.5513, status:"cr", owner:"Community", notes:"9 reports. Schools and children, zoning concerns." },
+];
+
+const STATUS_CFG = {
+  op:   { color: "#4a7c3f", label: "Operational",        cls: "op",   radius: 9  },
+  uc:   { color: "#c8841a", label: "Under Construction", cls: "uc",   radius: 9  },
+  prop: { color: "#1e4d8c", label: "Proposed",           cls: "prop", radius: 8  },
+  cr:   { color: "#b33a2a", label: "Community Reported", cls: "cr",   radius: 7  },
+};
+
+function makeIcon(cfg) {
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${cfg.radius*2+4}" height="${cfg.radius*2+4}">
+    <circle cx="${cfg.radius+2}" cy="${cfg.radius+2}" r="${cfg.radius}" fill="${cfg.color}" fill-opacity="0.85" stroke="white" stroke-width="1.5"/>
+  </svg>`;
+  return L.divIcon({
+    className: '',
+    html: svg,
+    iconSize: [cfg.radius*2+4, cfg.radius*2+4],
+    iconAnchor: [cfg.radius+2, cfg.radius+2],
+  });
+}
+
+const map = L.map('map', { zoomControl: true }).setView([38.5, -97], 4);
+
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+  maxZoom: 18,
+}).addTo(map);
+
+const layers = { all: [], op: [], uc: [], prop: [], cr: [] };
+
+DATA.forEach(d => {
+  const cfg = STATUS_CFG[d.status];
+  const marker = L.marker([d.lat, d.lng], { icon: makeIcon(cfg) });
+  const popup = `
+    <div class="popup-inner">
+      <span class="popup-status ${cfg.cls}">${cfg.label}</span>
+      <div class="popup-name">${d.name}</div>
+      <div class="popup-location">📍 ${d.loc}</div>
+      <div class="popup-detail">
+        <b>Owner / Operator:</b> ${d.owner}<br>
+        <span style="margin-top:4px; display:block;">${d.notes}</span>
+      </div>
+    </div>`;
+  marker.bindPopup(popup, { maxWidth: 280 });
+  marker.addTo(map);
+  layers[d.status].push(marker);
+  layers.all.push(marker);
+});
+
+// Update counts
+document.getElementById('count-op').textContent   = layers.op.length;
+document.getElementById('count-uc').textContent   = layers.uc.length;
+document.getElementById('count-prop').textContent = layers.prop.length;
+document.getElementById('count-cr').textContent   = layers.cr.length;
+
+// Filter buttons
+let active = 'all';
+document.querySelectorAll('.filter-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const filter = btn.dataset.filter;
+    if (filter === active) return;
+
+    // Hide all
+    layers.all.forEach(m => map.removeLayer(m));
+
+    // Show selected
+    const toShow = filter === 'all' ? layers.all : layers[filter];
+    toShow.forEach(m => m.addTo(map));
+
+    // Update buttons
+    document.querySelectorAll('.filter-btn').forEach(b => {
+      b.classList.remove('active', 'all', 'op', 'uc', 'prop', 'cr');
+    });
+    btn.classList.add('active', filter);
+    active = filter;
+  });
+});
+</script>
+</body>
+</html>
