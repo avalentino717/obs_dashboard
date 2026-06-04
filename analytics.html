@@ -53,6 +53,9 @@
       <h3 id="filters-title" class="analytics-section__title">⚙️ Global Filters</h3>
       <p class="analytics-section__desc">Narrow the dataset before exploring the charts. All views update together.</p>
     </div>
+    <!-- Hidden staging: individual filters render here so _filterPanel can steal their nodes -->
+    <div id="notebook-filters-hidden" style="position:absolute;visibility:hidden;pointer-events:none;overflow:hidden;height:0;"></div>
+    <!-- Combined filter panel lands here -->
     <div id="notebook-filters"></div>
   </section>
 
@@ -124,43 +127,44 @@ themeToggle.addEventListener("click", () => {
   setTheme(document.body.dataset.theme === "light" ? "dark" : "light");
 });
 
-// Named cells → slot mapping
+// Individual filter cells must render so _filterPanel can steal their DOM nodes.
+// We mount them in hidden off-screen divs, then viewof filters (the combined panel)
+// goes into the visible notebook-filters container.
+const HIDDEN = document.getElementById("notebook-filters-hidden");
+
 const SLOTS = {
-  "viewof industryFilter":   "notebook-filters",
-  "viewof seniorityFilter":  "notebook-filters",
-  "viewof sizeFilter":       "notebook-filters",
-  "viewof riskFilter":       "notebook-filters",
-  "viewof adoptionFilter":   "notebook-filters",
+  "viewof industryFilter":   "notebook-filters-hidden",
+  "viewof seniorityFilter":  "notebook-filters-hidden",
+  "viewof sizeFilter":       "notebook-filters-hidden",
+  "viewof riskFilter":       "notebook-filters-hidden",
+  "viewof adoptionFilter":   "notebook-filters-hidden",
   "viewof filters":          "notebook-filters",
   "viewof storyStep":        "notebook-story",
   "viewof yearMax":          "notebook-year",
 };
 
-// Anonymous cells render in definition order. From notebook.js:
+// Anonymous cells in definition order from notebook.js:
 //   anon #1 → title (_1)          → skip
 //   anon #2 → kpis                → notebook-kpis
 //   anon #3 → chartExplanation    → notebook-explanation
 //   anon #4 → chart               → notebook-chart
 //   anon #5 → hint                → skip
 const ANON_SLOTS = [
-  null,                   // #1 title — skip
-  "notebook-kpis",        // #2 kpis
-  "notebook-explanation", // #3 chartExplanation
-  "notebook-chart",       // #4 chart
-  null,                   // #5 hint — skip
+  null,
+  "notebook-kpis",
+  "notebook-explanation",
+  "notebook-chart",
+  null,
 ];
 let anonIndex = 0;
 
 function observer(name) {
   let slotId;
-
   if (name === undefined || name === null) {
-    // anonymous cell — consume next anon slot
     slotId = ANON_SLOTS[anonIndex++] ?? null;
   } else {
     slotId = SLOTS[name] ?? null;
   }
-
   if (!slotId) return null;
 
   const container = document.getElementById(slotId);

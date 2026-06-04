@@ -1834,7 +1834,6 @@ body[data-theme="light"] .home-hero--solo {
   border-radius: 14px;
   background: var(--panel-bg);
   box-shadow: var(--shadow);
-  overflow: hidden;
 }
 
 .analytics-section__header {
@@ -1862,6 +1861,13 @@ body[data-theme="light"] .home-hero--solo {
 #notebook-kpis,
 #notebook-story,
 #notebook-year {
+  padding: 20px 28px 24px;
+  overflow-x: auto;   /* let filter row scroll rather than clip */
+}
+
+/* filter panel must not clip its open dropdowns */
+#notebook-filters {
+  overflow: visible;
   padding: 20px 28px 24px;
 }
 
