@@ -26,35 +26,10 @@
   </div>
 </header>
 
-<main>
-  <section class="home-hero" aria-labelledby="home-title">
-    <div class="workforce-map" aria-hidden="true">
-      <div class="workforce-map__grid"></div>
-      <div class="work-node work-node--research">
-        <span>Research</span>
-        <strong>AI-assisted</strong>
-      </div>
-      <div class="work-node work-node--support">
-        <span>Support</span>
-        <strong>Automated triage</strong>
-      </div>
-      <div class="work-node work-node--analysis">
-        <span>Analysis</span>
-        <strong>Human review</strong>
-      </div>
-      <div class="work-node work-node--care">
-        <span>Care work</span>
-        <strong>Human-led</strong>
-      </div>
-      <div class="workforce-map__line workforce-map__line--one"></div>
-      <div class="workforce-map__line workforce-map__line--two"></div>
-      <div class="impact-strip">
-        <div><span>AI mentions</span><strong>rising</strong></div>
-        <div><span>Risk exposure</span><strong>uneven</strong></div>
-        <div><span>Reskilling</span><strong>urgent</strong></div>
-      </div>
-    </div>
+<main class="home-main">
 
+  <!-- Full-viewport hero -->
+  <section class="home-hero home-hero--solo" aria-labelledby="home-title">
     <div class="home-hero__content">
       <p class="home-hero__eyebrow">Jobs at the Crossroads</p>
       <h2 id="home-title">AI is changing the work inside jobs before it replaces job titles.</h2>
@@ -64,37 +39,60 @@
         while others still depend on judgment, care, context, and accountability.
       </p>
       <p>
-        This story follows how job postings reflect that shift: where AI adoption is growing, which
-        roles show higher AI intensity, how salaries move, where automation risk concentrates, and
-        where reskilling demand appears.
+        This project explores how job postings reflect that shift—and the physical infrastructure
+        driving it. Choose a view below to begin.
       </p>
-      <button class="home-hero__cta" type="button" id="see-analytics">See analytics</button>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <span class="hero-stat__value">500+</span>
+          <span class="hero-stat__label">Data centers tracked</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat__value">9</span>
+          <span class="hero-stat__label">Industries analyzed</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat__value">15 yr</span>
+          <span class="hero-stat__label">Of job posting data</span>
+        </div>
+        <div class="hero-stat">
+          <span class="hero-stat__value">3,674</span>
+          <span class="hero-stat__label">Community reports</span>
+        </div>
+      </div>
+
+      <p class="home-hero__scroll-hint" aria-hidden="true">Scroll to explore ↓</p>
     </div>
   </section>
 
   <!-- Three-page nav cards -->
-  <nav class="page-nav" aria-label="Explore sections">
-    <a class="page-nav__card" href="./map.html">
-      <div class="page-nav__card-icon">🗺️</div>
-      <div class="page-nav__card-body">
-        <p class="page-nav__card-eyebrow">Physical Infrastructure</p>
-        <strong class="page-nav__card-title">AI Data Center Map</strong>
-        <p class="page-nav__card-desc">Explore operational, under-construction, proposed, and community-reported AI data centers across America. Includes zip-code-level analytics.</p>
-      </div>
-      <span class="page-nav__card-arrow" aria-hidden="true">→</span>
-    </a>
+  <section class="home-nav-section" aria-labelledby="explore-title">
+    <h2 id="explore-title" class="home-nav-section__title">Choose a view</h2>
+    <nav class="page-nav" aria-label="Explore sections">
+      <a class="page-nav__card" href="./map.html">
+        <div class="page-nav__card-icon">🗺️</div>
+        <div class="page-nav__card-body">
+          <p class="page-nav__card-eyebrow">Physical Infrastructure</p>
+          <strong class="page-nav__card-title">AI Data Center Map</strong>
+          <p class="page-nav__card-desc">Explore operational, under-construction, proposed, and community-reported AI data centers across America. Includes zip-code-level community analytics from Erin Brockovich's reporting office.</p>
+        </div>
+        <span class="page-nav__card-arrow" aria-hidden="true">→</span>
+      </a>
 
-    <a class="page-nav__card" href="./analytics.html">
-      <div class="page-nav__card-icon">📊</div>
-      <div class="page-nav__card-body">
-        <p class="page-nav__card-eyebrow">Job Posting Analysis</p>
-        <strong class="page-nav__card-title">Analytics Dashboard</strong>
-        <p class="page-nav__card-desc">Guided chart story covering AI adoption trends, salary shifts, automation risk by industry and seniority, reskilling demand, and correlations.</p>
-      </div>
-      <span class="page-nav__card-arrow" aria-hidden="true">→</span>
-    </a>
-  </nav>
+      <a class="page-nav__card" href="./analytics.html">
+        <div class="page-nav__card-icon">📊</div>
+        <div class="page-nav__card-body">
+          <p class="page-nav__card-eyebrow">Job Posting Analysis</p>
+          <strong class="page-nav__card-title">Analytics Dashboard</strong>
+          <p class="page-nav__card-desc">Guided chart story covering AI adoption trends, salary shifts, automation risk by industry and seniority, reskilling demand, and metric correlations across 15 years of data.</p>
+        </div>
+        <span class="page-nav__card-arrow" aria-hidden="true">→</span>
+      </a>
+    </nav>
+  </section>
+
 </main>
 
-<footer class="app-footer">&copy; Arianna!!</footer>
+<footer class="app-footer">&copy; Wisdom, Chris, Angela, Cloris</footer>
 <script type="module" src="./app.js"></script>

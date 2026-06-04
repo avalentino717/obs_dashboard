@@ -28,6 +28,41 @@
 </header>
 
 <main class="map-page-main">
+
+  <!-- Context blurb -->
+  <div class="map-page-header">
+    <div class="map-page-header__text">
+      <p class="map-page-header__eyebrow">Physical Infrastructure</p>
+      <h2 class="map-page-header__title">AI Data Centers Across America</h2>
+      <p class="map-page-header__desc">
+        The data centers powering AI are reshaping communities across the United States—
+        often with little public notice. This map tracks facilities that are operational,
+        under construction, proposed, and locations where residents have raised concerns
+        about water use, grid strain, health impacts, noise, and zoning. Zoom in to
+        explore your region, or use the filters to focus on a specific status category.
+      </p>
+    </div>
+    <div class="map-page-header__stats">
+      <div class="map-page-header__stat">
+        <span class="map-page-header__stat-value">70+</span>
+        <span class="map-page-header__stat-label">Facilities mapped</span>
+      </div>
+      <div class="map-page-header__stat">
+        <span class="map-page-header__stat-value">3,674</span>
+        <span class="map-page-header__stat-label">Community reports</span>
+      </div>
+      <div class="map-page-header__stat">
+        <span class="map-page-header__stat-value">49</span>
+        <span class="map-page-header__stat-label">States with reports</span>
+      </div>
+      <div class="map-page-header__stat">
+        <span class="map-page-header__stat-value">1,480</span>
+        <span class="map-page-header__stat-label">Zip codes affected</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Map iframe -->
   <div class="map-page-frame">
     <iframe
       src="./ai-datacenter-map.html"
@@ -37,20 +72,171 @@
     </iframe>
   </div>
 
+  <!-- Community insights from Brockovich -->
+  <section class="community-stats" aria-labelledby="community-title">
+    <div class="community-stats__header">
+      <p class="community-stats__eyebrow">Community Impact · via Erin Brockovich's Reporting Office</p>
+      <h2 id="community-title" class="community-stats__title">What Communities Are Reporting</h2>
+      <p class="community-stats__desc">
+        Through Erin Brockovich's data center reporting form, residents across the country have submitted
+        over 3,600 reports about AI data center facilities near their homes. Updated May 31, 2026.
+      </p>
+    </div>
+
+    <!-- Top headline numbers -->
+    <div class="community-stats__kpis">
+      <div class="community-stats__kpi">
+        <span class="community-stats__kpi-value">3,674</span>
+        <span class="community-stats__kpi-label">Total reports</span>
+      </div>
+      <div class="community-stats__kpi">
+        <span class="community-stats__kpi-value">3,517</span>
+        <span class="community-stats__kpi-label">In the last 30 days</span>
+      </div>
+      <div class="community-stats__kpi">
+        <span class="community-stats__kpi-value">49</span>
+        <span class="community-stats__kpi-label">States represented</span>
+      </div>
+      <div class="community-stats__kpi">
+        <span class="community-stats__kpi-value">1,480</span>
+        <span class="community-stats__kpi-label">Unique zip codes</span>
+      </div>
+    </div>
+
+    <div class="community-stats__body">
+
+      <!-- Concern categories -->
+      <div class="community-stats__panel">
+        <h3 class="community-stats__panel-title">What Communities Are Worried About</h3>
+        <p class="community-stats__panel-note">Keyword analysis · submissions can match multiple categories</p>
+        <div class="concern-bars">
+          <div class="concern-bar">
+            <div class="concern-bar__label">Water</div>
+            <div class="concern-bar__track"><div class="concern-bar__fill" style="width:41.2%;background:#3b82f6"></div></div>
+            <div class="concern-bar__pct">663 &nbsp;<span>41.2%</span></div>
+          </div>
+          <div class="concern-bar">
+            <div class="concern-bar__label">Electricity / Grid</div>
+            <div class="concern-bar__track"><div class="concern-bar__fill" style="width:22.2%;background:#f59e0b"></div></div>
+            <div class="concern-bar__pct">358 &nbsp;<span>22.2%</span></div>
+          </div>
+          <div class="concern-bar">
+            <div class="concern-bar__label">Health</div>
+            <div class="concern-bar__track"><div class="concern-bar__fill" style="width:18.1%;background:#ef4444"></div></div>
+            <div class="concern-bar__pct">292 &nbsp;<span>18.1%</span></div>
+          </div>
+          <div class="concern-bar">
+            <div class="concern-bar__label">Wildlife / Land</div>
+            <div class="concern-bar__track"><div class="concern-bar__fill" style="width:14.6%;background:#22c55e"></div></div>
+            <div class="concern-bar__pct">235 &nbsp;<span>14.6%</span></div>
+          </div>
+          <div class="concern-bar">
+            <div class="concern-bar__label">Noise</div>
+            <div class="concern-bar__track"><div class="concern-bar__fill" style="width:13.7%;background:#a855f7"></div></div>
+            <div class="concern-bar__pct">221 &nbsp;<span>13.7%</span></div>
+          </div>
+          <div class="concern-bar">
+            <div class="concern-bar__label">Zoning / Process</div>
+            <div class="concern-bar__track"><div class="concern-bar__fill" style="width:9.9%;background:#6366f1"></div></div>
+            <div class="concern-bar__pct">159 &nbsp;<span>9.9%</span></div>
+          </div>
+          <div class="concern-bar">
+            <div class="concern-bar__label">NDAs / Secrecy</div>
+            <div class="concern-bar__track"><div class="concern-bar__fill" style="width:8%;background:#ec4899"></div></div>
+            <div class="concern-bar__pct">128 &nbsp;<span>8.0%</span></div>
+          </div>
+          <div class="concern-bar">
+            <div class="concern-bar__label">Schools / Children</div>
+            <div class="concern-bar__track"><div class="concern-bar__fill" style="width:5.7%;background:#14b8a6"></div></div>
+            <div class="concern-bar__pct">91 &nbsp;<span>5.7%</span></div>
+          </div>
+          <div class="concern-bar">
+            <div class="concern-bar__label">Traffic</div>
+            <div class="concern-bar__track"><div class="concern-bar__fill" style="width:3%;background:#f97316"></div></div>
+            <div class="concern-bar__pct">49 &nbsp;<span>3.0%</span></div>
+          </div>
+          <div class="concern-bar">
+            <div class="concern-bar__label">Property Values</div>
+            <div class="concern-bar__track"><div class="concern-bar__fill" style="width:1.2%;background:#64748b"></div></div>
+            <div class="concern-bar__pct">20 &nbsp;<span>1.2%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top reported cities -->
+      <div class="community-stats__panel">
+        <h3 class="community-stats__panel-title">Top Reported Cities</h3>
+        <p class="community-stats__panel-note">Top 20 communities by report volume</p>
+        <ol class="top-cities">
+          <li><span class="top-cities__name">Sulphur Springs, TX</span><span class="top-cities__count">300</span></li>
+          <li><span class="top-cities__name">Lusby, MD</span><span class="top-cities__count">41</span></li>
+          <li><span class="top-cities__name">Box Elder County, UT</span><span class="top-cities__count">39</span></li>
+          <li><span class="top-cities__name">Archbald, PA</span><span class="top-cities__count">29</span></li>
+          <li><span class="top-cities__name">Madison, IN</span><span class="top-cities__count">24</span></li>
+          <li><span class="top-cities__name">Hobart, IN</span><span class="top-cities__count">18</span></li>
+          <li><span class="top-cities__name">Lebanon, IN</span><span class="top-cities__count">17</span></li>
+          <li><span class="top-cities__name">Kenilworth, NJ</span><span class="top-cities__count">16</span></li>
+          <li><span class="top-cities__name">Fort Meade, FL</span><span class="top-cities__count">15</span></li>
+          <li><span class="top-cities__name">Abilene, TX</span><span class="top-cities__count">15</span></li>
+          <li><span class="top-cities__name">Clarksville, AR</span><span class="top-cities__count">15</span></li>
+          <li><span class="top-cities__name">Cheyenne, WY</span><span class="top-cities__count">14</span></li>
+          <li><span class="top-cities__name">La Pine, OR</span><span class="top-cities__count">14</span></li>
+          <li><span class="top-cities__name">Town of Alabama, NY</span><span class="top-cities__count">12</span></li>
+          <li><span class="top-cities__name">Arlington, WA</span><span class="top-cities__count">12</span></li>
+          <li><span class="top-cities__name">Festus, MO</span><span class="top-cities__count">11</span></li>
+          <li><span class="top-cities__name">San Angelo, TX</span><span class="top-cities__count">11</span></li>
+          <li><span class="top-cities__name">Marshfield, MO</span><span class="top-cities__count">11</span></li>
+          <li><span class="top-cities__name">Lufkin, TX</span><span class="top-cities__count">9</span></li>
+          <li><span class="top-cities__name">Maysville, GA</span><span class="top-cities__count">9</span></li>
+        </ol>
+      </div>
+
+      <!-- Reports by state -->
+      <div class="community-stats__panel community-stats__panel--wide">
+        <h3 class="community-stats__panel-title">Reports by State <span class="community-stats__panel-note">— top 25 of 49 states</span></h3>
+        <div class="state-bars">
+          <div class="state-bar"><span class="state-bar__name">TX</span><div class="state-bar__track"><div class="state-bar__fill" style="width:100%"></div></div><span class="state-bar__n">729 <em>19.8%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">PA</span><div class="state-bar__track"><div class="state-bar__fill" style="width:33.7%"></div></div><span class="state-bar__n">246 <em>6.7%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">OH</span><div class="state-bar__track"><div class="state-bar__fill" style="width:29.8%"></div></div><span class="state-bar__n">217 <em>5.9%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">IN</span><div class="state-bar__track"><div class="state-bar__fill" style="width:25.2%"></div></div><span class="state-bar__n">184 <em>5.0%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">GA</span><div class="state-bar__track"><div class="state-bar__fill" style="width:23.3%"></div></div><span class="state-bar__n">170 <em>4.6%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">MO</span><div class="state-bar__track"><div class="state-bar__fill" style="width:18.5%"></div></div><span class="state-bar__n">135 <em>3.7%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">IL</span><div class="state-bar__track"><div class="state-bar__fill" style="width:17.1%"></div></div><span class="state-bar__n">125 <em>3.4%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">MI</span><div class="state-bar__track"><div class="state-bar__fill" style="width:16.5%"></div></div><span class="state-bar__n">120 <em>3.3%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">VA</span><div class="state-bar__track"><div class="state-bar__fill" style="width:16%"></div></div><span class="state-bar__n">117 <em>3.2%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">AZ</span><div class="state-bar__track"><div class="state-bar__fill" style="width:11.1%"></div></div><span class="state-bar__n">81 <em>2.2%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">KY</span><div class="state-bar__track"><div class="state-bar__fill" style="width:11.1%"></div></div><span class="state-bar__n">81 <em>2.2%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">NY</span><div class="state-bar__track"><div class="state-bar__fill" style="width:11.1%"></div></div><span class="state-bar__n">81 <em>2.2%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">FL</span><div class="state-bar__track"><div class="state-bar__fill" style="width:10.6%"></div></div><span class="state-bar__n">77 <em>2.1%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">CA</span><div class="state-bar__track"><div class="state-bar__fill" style="width:10.4%"></div></div><span class="state-bar__n">76 <em>2.1%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">UT</span><div class="state-bar__track"><div class="state-bar__fill" style="width:10.4%"></div></div><span class="state-bar__n">76 <em>2.1%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">NC</span><div class="state-bar__track"><div class="state-bar__fill" style="width:10.2%"></div></div><span class="state-bar__n">74 <em>2.0%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">OK</span><div class="state-bar__track"><div class="state-bar__fill" style="width:9.7%"></div></div><span class="state-bar__n">71 <em>1.9%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">MD</span><div class="state-bar__track"><div class="state-bar__fill" style="width:9.3%"></div></div><span class="state-bar__n">68 <em>1.9%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">KS</span><div class="state-bar__track"><div class="state-bar__fill" style="width:7.5%"></div></div><span class="state-bar__n">55 <em>1.5%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">WV</span><div class="state-bar__track"><div class="state-bar__fill" style="width:7.5%"></div></div><span class="state-bar__n">55 <em>1.5%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">SC</span><div class="state-bar__track"><div class="state-bar__fill" style="width:7.5%"></div></div><span class="state-bar__n">55 <em>1.5%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">TN</span><div class="state-bar__track"><div class="state-bar__fill" style="width:7.1%"></div></div><span class="state-bar__n">52 <em>1.4%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">WA</span><div class="state-bar__track"><div class="state-bar__fill" style="width:6.9%"></div></div><span class="state-bar__n">50 <em>1.4%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">AR</span><div class="state-bar__track"><div class="state-bar__fill" style="width:6.9%"></div></div><span class="state-bar__n">50 <em>1.4%</em></span></div>
+          <div class="state-bar"><span class="state-bar__name">NJ</span><div class="state-bar__track"><div class="state-bar__fill" style="width:6.6%"></div></div><span class="state-bar__n">48 <em>1.3%</em></span></div>
+        </div>
+        <p class="community-stats__source">Source: <a href="https://brockovichdatacenter.com/community-stats.html" target="_blank" rel="noopener">brockovichdatacenter.com</a> · Data through May 31, 2026</p>
+      </div>
+
+    </div>
+  </section>
+
   <!-- Bottom page navigation -->
   <nav class="bottom-nav" aria-label="Navigate to other sections">
     <a class="bottom-nav__btn bottom-nav__btn--home" href="./index.html">← Home</a>
     <div class="bottom-nav__pages">
-      <a class="bottom-nav__btn bottom-nav__btn--active" href="./map.html" aria-current="page">
-        🗺️ Data Center Map
-      </a>
-      <a class="bottom-nav__btn" href="./analytics.html">
-        📊 Analytics Dashboard
-      </a>
+      <a class="bottom-nav__btn bottom-nav__btn--active" href="./map.html" aria-current="page">🗺️ Data Center Map</a>
+      <a class="bottom-nav__btn" href="./analytics.html">📊 Analytics Dashboard</a>
     </div>
   </nav>
+
 </main>
 
 <footer class="app-footer">&copy; Wisdom, Chris, Angela, Cloris</footer>
-
 <script type="module" src="./app.js"></script>

@@ -27,25 +27,139 @@
   </div>
 </header>
 
-<main>
-  <section class="analytics-shell" id="analytics" aria-label="Analytics story">
-    <div id="notebook"></div>
+<main class="analytics-main">
+
+  <!-- Page intro -->
+  <div class="analytics-intro">
+    <p class="analytics-intro__eyebrow">Job Posting Analysis · 2010–2025</p>
+    <h2 class="analytics-intro__title">Analytics Dashboard</h2>
+    <p class="analytics-intro__desc">
+      A guided chart story exploring how AI is showing up in job postings across industries.
+      Use the global filters to narrow the dataset, then step through each chart in order—
+      or jump directly to the section that interests you most.
+    </p>
+    <!-- Section jump links -->
+    <nav class="analytics-toc" aria-label="Jump to section">
+      <a class="analytics-toc__link" href="#section-filters">⚙️ Filters</a>
+      <a class="analytics-toc__link" href="#section-kpis">📌 Summary</a>
+      <a class="analytics-toc__link" href="#section-story">📖 Story</a>
+      <a class="analytics-toc__link" href="#section-chart">📊 Chart</a>
+    </nav>
+  </div>
+
+  <!-- Global filters -->
+  <section class="analytics-section" id="section-filters" aria-labelledby="filters-title">
+    <div class="analytics-section__header">
+      <h3 id="filters-title" class="analytics-section__title">⚙️ Global Filters</h3>
+      <p class="analytics-section__desc">Narrow the dataset before exploring the charts. All views update together.</p>
+    </div>
+    <div id="notebook-filters"></div>
+  </section>
+
+  <!-- KPI summary -->
+  <section class="analytics-section" id="section-kpis" aria-labelledby="kpis-title">
+    <div class="analytics-section__header">
+      <h3 id="kpis-title" class="analytics-section__title">📌 Dataset Summary</h3>
+      <p class="analytics-section__desc">Key metrics for the current filter selection.</p>
+    </div>
+    <div id="notebook-kpis"></div>
+  </section>
+
+  <!-- Guided story + chart -->
+  <section class="analytics-section analytics-section--chart" id="section-story" aria-labelledby="story-title">
+    <div class="analytics-section__header">
+      <h3 id="story-title" class="analytics-section__title">📖 Guided Chart Story</h3>
+      <p class="analytics-section__desc">Step through 11 charts in a suggested order, or use the dots to jump to any view. Each step includes a short reading guide below the chart.</p>
+    </div>
+    <div id="notebook-story"></div>
+  </section>
+
+  <!-- Chart output -->
+  <section class="analytics-section analytics-section--chart-output" id="section-chart">
+    <div id="notebook-chart"></div>
+    <div id="notebook-explanation"></div>
+  </section>
+
+  <!-- Year control -->
+  <section class="analytics-section" id="section-year" aria-labelledby="year-title">
+    <div class="analytics-section__header">
+      <h3 id="year-title" class="analytics-section__title">📅 Year Range</h3>
+      <p class="analytics-section__desc">Animate or scrub through the data year by year.</p>
+    </div>
+    <div id="notebook-year"></div>
   </section>
 
   <!-- Bottom page navigation -->
   <nav class="bottom-nav" aria-label="Navigate to other sections">
     <a class="bottom-nav__btn bottom-nav__btn--home" href="./index.html">← Home</a>
     <div class="bottom-nav__pages">
-      <a class="bottom-nav__btn" href="./map.html">
-        🗺️ Data Center Map
-      </a>
-      <a class="bottom-nav__btn bottom-nav__btn--active" href="./analytics.html" aria-current="page">
-        📊 Analytics Dashboard
-      </a>
+      <a class="bottom-nav__btn" href="./map.html">🗺️ Data Center Map</a>
+      <a class="bottom-nav__btn bottom-nav__btn--active" href="./analytics.html" aria-current="page">📊 Analytics Dashboard</a>
     </div>
   </nav>
+
 </main>
 
 <footer class="app-footer">&copy; Wisdom, Chris, Angela, Cloris</footer>
 
-<script type="module" src="./app.js"></script>
+<!-- Wire up observable cells to named slots instead of one #notebook div -->
+<script type="module">
+import define from "./index.js";
+import {Runtime, Inspector} from "./runtime.js";
+
+const themeToggle = document.querySelector("#theme-toggle");
+const themeLabel  = document.querySelector("#theme-label");
+
+function setTheme(theme) {
+  document.body.dataset.theme = theme;
+  localStorage.setItem("dashboard-theme", theme);
+  const isLight = theme === "light";
+  themeToggle.setAttribute("aria-pressed", String(isLight));
+  themeLabel.textContent = isLight ? "Dark" : "Light";
+}
+const savedTheme  = localStorage.getItem("dashboard-theme");
+const prefersLight = window.matchMedia("(prefers-color-scheme: light)").matches;
+setTheme(savedTheme || (prefersLight ? "light" : "dark"));
+themeToggle.addEventListener("click", () => {
+  setTheme(document.body.dataset.theme === "light" ? "dark" : "light");
+});
+
+// Slot map: cell name → container id
+// "viewof X" cells are the interactive controls; unnamed/rendered cells go to chart
+const SLOTS = {
+  // filters
+  "viewof filterPanel":      "notebook-filters",
+  "viewof industryFilter":   "notebook-filters",
+  "viewof seniorityFilter":  "notebook-filters",
+  "viewof sizeFilter":       "notebook-filters",
+  "viewof riskFilter":       "notebook-filters",
+  "viewof adoptionFilter":   "notebook-filters",
+  // kpis
+  "kpis":                    "notebook-kpis",
+  // story stepper
+  "viewof storyStep":        "notebook-story",
+  // chart + explanation
+  "chart":                   "notebook-chart",
+  "chartExplanation":        "notebook-explanation",
+  // year player
+  "viewof yearMax":          "notebook-year",
+};
+
+const fallback = document.getElementById("notebook-chart");
+
+function observer(name) {
+  const slotId = SLOTS[name];
+  const container = slotId ? document.getElementById(slotId) : null;
+
+  if (!container && !name?.startsWith("viewof ")) return null;
+  if (!container) return null;
+
+  const cell = document.createElement("div");
+  cell.dataset.name = name || "";
+  container.appendChild(cell);
+  return new Inspector(cell);
+}
+
+const runtime = new Runtime();
+runtime.module(define, observer);
+</script>
