@@ -124,34 +124,46 @@ themeToggle.addEventListener("click", () => {
   setTheme(document.body.dataset.theme === "light" ? "dark" : "light");
 });
 
-// Slot map: cell name → container id
-// "viewof X" cells are the interactive controls; unnamed/rendered cells go to chart
+// Named cells → slot mapping
 const SLOTS = {
-  // filters
-  "viewof filterPanel":      "notebook-filters",
   "viewof industryFilter":   "notebook-filters",
   "viewof seniorityFilter":  "notebook-filters",
   "viewof sizeFilter":       "notebook-filters",
   "viewof riskFilter":       "notebook-filters",
   "viewof adoptionFilter":   "notebook-filters",
-  // kpis
-  "kpis":                    "notebook-kpis",
-  // story stepper
+  "viewof filters":          "notebook-filters",
   "viewof storyStep":        "notebook-story",
-  // chart + explanation
-  "chart":                   "notebook-chart",
-  "chartExplanation":        "notebook-explanation",
-  // year player
   "viewof yearMax":          "notebook-year",
 };
 
-const fallback = document.getElementById("notebook-chart");
+// Anonymous cells render in definition order. From notebook.js:
+//   anon #1 → title (_1)          → skip
+//   anon #2 → kpis                → notebook-kpis
+//   anon #3 → chartExplanation    → notebook-explanation
+//   anon #4 → chart               → notebook-chart
+//   anon #5 → hint                → skip
+const ANON_SLOTS = [
+  null,                   // #1 title — skip
+  "notebook-kpis",        // #2 kpis
+  "notebook-explanation", // #3 chartExplanation
+  "notebook-chart",       // #4 chart
+  null,                   // #5 hint — skip
+];
+let anonIndex = 0;
 
 function observer(name) {
-  const slotId = SLOTS[name];
-  const container = slotId ? document.getElementById(slotId) : null;
+  let slotId;
 
-  if (!container && !name?.startsWith("viewof ")) return null;
+  if (name === undefined || name === null) {
+    // anonymous cell — consume next anon slot
+    slotId = ANON_SLOTS[anonIndex++] ?? null;
+  } else {
+    slotId = SLOTS[name] ?? null;
+  }
+
+  if (!slotId) return null;
+
+  const container = document.getElementById(slotId);
   if (!container) return null;
 
   const cell = document.createElement("div");
